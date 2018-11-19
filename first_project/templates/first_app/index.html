@@ -1,0 +1,28 @@
+{% extends "first_app/bas.html" %}
+{% load staticfiles %}
+{% block body_block %}
+	<h1>HI WELCOME</h1>
+	<h2>THESE ARE YOUR ACCESS RECORDS</h2>
+	<div class="django2">
+		{% if access_records %}
+			<table border="black">
+				<thead>	
+					<th>Site Name</th>
+					<th> Date accessed</th>
+				</thead>
+				{% for i in access_records%}
+				<tr>
+					<td>{{ i.name }}</td>
+					<td> {{i.date }}</td>
+				</tr>
+				{% endfor %}	
+		
+			</table>	
+		{% else %}
+			<p>NO ACCESS RECORDS</p>	
+
+		{% endif%}	
+		{{ insert_me|title}}
+	</div>	
+	<a href="first_app/form_page/">go to form</a>
+{% endblock %}	

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>forms</title>
+
+</head>
+<body>
+	<h1>Welcome to form page</h1>
+	<div class="container">
+		<form method="POST">
+			
+			{{ form.as_p}}
+			{% csrf_token %}
+			<input type="submit" value="Submit" name="form1">
+		</form>
+				
+	</div>
+</body>
+</html>

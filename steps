@@ -1,0 +1,175 @@
+ ========================level 1=====================================
+
+ 1.django-admin startproject <project name>
+
+ 2.python manage.py startapp <app name>
+
+ 3.python manage.py runserver - to start webpage
+
+ 4. go to setings.py in main project folder and add your app name to instaled apps list
+
+ 5. in apps folder in views.py write views 
+
+ 6.to map views(funtions) to website 
+ 	go to url.py in project folder and from <app name> import views 
+ 	then add a url which maps to a specific funtion in views
+
+ 7.	include is used to have urls.py in each app
+
+ 8. templates contains the static part of the website folder 
+
+ 9. use os.path.join(BASE_DIR,"templates") to add the templates folder to your project as new variable 
+
+ 10. go to template dic to add the vraible 
+
+ 11.then create mainproject/template
+
+ 12. use the render funtion to get dynamic content {{}} and dictionaries to specific pages  
+
+ 13.then create mainproject/static/images then add its path to variable 
+
+ 14. create STATIC_DIRS empty list then add the name 
+
+ 15. from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+ 		urlpatterns+=staticfiles_urlpatterns()
+
+ 	to the main project urls.py
+
+ 16.{% load staticfiles %} on the top to load static files 
+ 	{%%} to insert the location dynamically 
+
+==================================level 2 ==============================================
+
+1.editing the models.py file in your app folder 
+
+2.models are basicaly sql tables 
+
+3. after all the models and its contraints are done 
+
+4.python manage.py migrate ,python manage.py makemigrations <app name> ,python migrate 
+
+5. to test tables type python manage.py shell 
+			from first_app.models import <model name>
+			t = Topic(top_name='social network')
+			t.save()
+			print(Topic.objects.all())
+			sample output-----------------------> <QuerySet [<Topic: social network>]>
+
+6.register the models to admin.py in the app folder 
+		from <app name>.models import model1,model2
+		admin.site.register(model1)
+7. python manage.py createsuperuser ----->to create a superuser to the admin page 
+
+8.adding fake data to populate your data base 
+			add populate_first_app.py file to your mainproject folder 
+			refer populate_first_app.py file 
+
+9.MTV : 
+		import models to views 
+		use variables to query models data eg: webpg_list=AccessRecord.objects.order_by('date')
+												date_dic={'access_record':webpg_list}
+		then use if and for loops to traverse them
+
+===========================================level 3=============================================================
+
+1.forms or use raw sql for easy of use
+
+2. create a forms.py in your app folder refer forms .py  
+
+3.create a view for the form 
+				form=froms.Formname()
+
+	if request.method=='POST' :
+		form=froms.Formname(request.POST)
+		if form.is_valid():
+			print("VALIDATION SUCCESS")
+			print("name: "+form.cleaned_data['name'])
+			print("email: "+form.cleaned_data['email'])
+			print("text: "+form.cleaned_data['text'])
+	else:
+		print("not valid")	
+
+	return render(request,'first_app/form_page.html',{'form':form})
+
+4. create a url mapping for this view 
+
+5.in the form page 
+		<form method="POST">
+			
+			{{ form.as_p}}
+			{% csrf_token %}
+			<input type="submit" value="Submit" name="form1">
+		</form>
+
+6.induvidual field alidation(user defined)
+		use a hidden field 
+		if field length >0 then its bot
+
+		def clean_attributename(self):
+		botcatcher=self.cleaned_data['botcatcher']
+		if len(botcatcher) >0 :
+			raise forms.ValidationError("GOTACHA  BOT")
+		return botcatcher
+
+		or 
+
+		create a funtion 
+		pass the funtion as validator=[funtionname]
+
+		def check(value):
+			#check something 
+			#raise an error if not satisfied 
+
+		name=forms.CharField(validators=[check])	
+
+
+7.induvidual field validation(built in)
+		from django.core import validators
+		validators=[validators.MaxLengthValidator(0)] can accept a list of validators added to form attribute 
+
+8. whole form validation 
+		def clean(self):
+		all_clean=super().clean()
+		email=all_clean['email']
+		verify_email=all_clean['verify_email']	
+
+		if email != verify_email:
+			raise forms.ValidationError("check them email boi")
+
+9. connecting forms and databases 
+	
+10.create the model for the form to connect to then register with the admin
+
+11.	in forms.py 
+	class NewUserForm(forms.ModelForm):
+		#custom form validation and fields 
+		class Meta():
+			model=User
+			fields='__all__' #signifies all data
+
+12. create url for the page and map to a view 
+
+13. in views.py 
+			
+	def signup(request):
+		form=froms.NewUserForm()
+
+		if request.method=='POST' :
+			form=froms.NewUserForm(request.POST)
+			if form.is_valid():
+				form.save(commit=True)    #saves to the db
+				return index(request)	  #goes back to index page 	
+		else:
+			print("not valid")	
+
+		return render(request,'first_app/form_page.html',{'form':form})
+		# return render(request,'first_app/form_page.html')
+
+===========================================level 4=============================================================
+
+1.relative urls
+	dont use ful hardcoded path
+
+2.template inheritence
+	 
+
